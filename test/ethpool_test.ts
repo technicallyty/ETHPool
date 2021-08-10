@@ -11,7 +11,7 @@ describe("ETHPool", function () {
 
   let ETHPool: Contract;
   let signers: SignerWithAddress[];
-  let depositID = 1;
+
   beforeEach(async () => {
     signers = await ethers.getSigners();
     const contract = await ethers.getContractFactory("ETHPool");
@@ -19,7 +19,7 @@ describe("ETHPool", function () {
     await ETHPool.deployed();
   });
 
-  it("Deployer's deposit will be the team", async function () {
+  it("should deplay and have the deployers address as the team", async function () {
     const team = signers[0];
 
     let teamPool: BigNumber = ethers.utils.parseEther('1');
@@ -28,7 +28,7 @@ describe("ETHPool", function () {
     expect(teamPool.toString()).equal(contractTeamPool.toString());
   });
 
-  it("deposit from a user", async function () {
+  it("should accept a deposit from the user", async function () {
     let user1 = signers[1];
     let user1Addr = user1.address;
     let user1Deposit: BigNumber = ethers.utils.parseEther('2');
@@ -114,7 +114,7 @@ describe("ETHPool", function () {
     expect(await ETHPool.connect(user1).withdrawRewards(user1.address, 0)).to.emit(ETHPool, "Withdraw").withArgs(user1.address, userDeposit.add(teamDeposit));
 
     const withdraw = ETHPool.connect(user1).withdrawRewards(user1.address, 0);
-    await expect(withdraw).eventually.be.rejectedWith("VM Exception while processing transaction: reverted with reason string 'error: unable to divide deposit by pool'");
+    await expect(withdraw).eventually.be.rejectedWith("VM Exception while processing transaction: reverted with reason string 'cannot withdraw 0 funds'");
   })
 
   it("should withdaw only users funds when there is 0 team rewards", async function () {

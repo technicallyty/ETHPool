@@ -1,6 +1,5 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "hardhat/console.sol";
 
 /// @title Edge and Node Code Challenge - ETHPool
@@ -11,8 +10,6 @@ import "hardhat/console.sol";
  * - only ETH is accepted for this impl. no ERC-20's accepted.
  */
 contract ETHPool {
-    using SafeMath for uint256;
-
     // ----------------- EVENTS -----------------
     /// @notice withdraw will fire when a user withdraws their funds
     event Withdraw(address, uint256);
@@ -27,16 +24,16 @@ contract ETHPool {
     /// @notice the address which deposits the bonus rewards
     address public team;
 
-    /// @notice mapping of deposit ID to pool
+    // mapping of deposit ID to pool
     mapping(uint256 => uint256) pool;
 
-    /// @notice mapping from address to mapping of depositID to deposit.
+    // mapping from address to mapping of depositID to deposit.
     mapping(address => mapping(uint256 => uint256)) deposits;
 
     /// @notice mapping of an address to it's coressponding deposit IDs.
     mapping(address => uint256[]) public allUserDepositIDs;
 
-	/// @notice mapping of address to a deposit ID's index in the allUserDepositID's list
+	// mapping of address to a deposit ID's index in the allUserDepositID's list
     mapping(address => mapping(uint256 => uint256)) userDepositIDindex;
 
     constructor() {
@@ -83,29 +80,23 @@ contract ETHPool {
         // get the sum and subtract it from rewardsPool
         uint256 sum = deposits[msg.sender][_depositID];
         require(
-            pool[_depositID] >= sum,
-            "fatal error: deposit outweighs rewards pool"
+            pool[_depositID] >= sum && sum != 0,
+            "cannot withdraw 0 funds"
         );
 
         // get the bonus
-        /// property:  bonus => (sum / rewardsPool) * deposits[team];
-        uint256 bonus = pool[_depositID].div(
-            sum,
-            "error: unable to divide deposit by pool"
-        );
-        bonus = deposits[team][_depositID].div(bonus);
+        // property:  bonus => (sum / rewardsPool) * deposits[team];
+        uint256 bonus = pool[_depositID]/sum;
+        bonus = deposits[team][_depositID]/bonus;
 
         // remove the deposit from the rewards pool
-        pool[_depositID] = pool[_depositID].sub(
-            sum,
-            "fatal error: cannot subtract deposit from pool"
-        );
+        pool[_depositID] = pool[_depositID] - sum;
 
         // remove the bonus from the team rewards pool
-        deposits[team][_depositID] = deposits[team][_depositID].sub(bonus);
+        deposits[team][_depositID] = deposits[team][_depositID] - bonus;
 
         // add the bonus to the sum, remove the balance and transfer
-        sum = sum.add(bonus);
+        sum += bonus;
         deposits[msg.sender][_depositID] = 0;
         removeDepositFromArray(_depositID);
         _to.transfer(sum);
