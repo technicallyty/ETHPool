@@ -1,0 +1,3 @@
+[submodule "ethpool-subgraph"]
+	path = subgraph/ethpool
+	url = https://github.com/technicallyty/ETHPool-Subgraph.git
