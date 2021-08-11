@@ -71,7 +71,7 @@ task("balance", "get the balance of the ETHPool contract")
     let units = args.units;
     let balance: BigNumber = await ETHPool.connect(account).balance();
 
-    console.log("Balance in ", units, ": ", hre.ethers.utils.parseUnits(balance.toString(), units).toString());    
+    console.log("Balance in ", units, ": ", hre.ethers.utils.formatUnits(balance.toString(), units).toString());    
   })
 
 // You need to export an object to set up your config
