@@ -5,12 +5,12 @@ Author: Tyler Goodman (technicallyty)
 ## ENV files
 Ensure you have properly set up a .env file in the project directory. The fields needed are: 
 - PRIVATE_KEY : the private key with the account you wish to use
-- ETHPOOL_ADDRESS : the address of the ETHPool contract (on goerli: 0x1fE76602Af0ef1fa9315897b3765EEd3795C8ca5)
-- GOERLI_RPC_URL : the RPC you wish to use with the GOERLI test net where my deployment lives
+- ETHPOOL_ADDRESS : the address of the ETHPool contract (on goerli: 0x2e9FcD7c3D160A4C7a60A8f8a709da00Eb3C7539)
+- GOERLI_RPC_URL : the RPC you wish to use with the GOERLI testnet where my deployment lives
 
 ### Contract
 
-This contract is live on the Goerli Testnet at 0x1fE76602Af0ef1fa9315897b3765EEd3795C8ca5.
+This contract is live on the Goerli Testnet at 0x2e9FcD7c3D160A4C7a60A8f8a709da00Eb3C7539.
 
 ### Features
 I've included a few hardhat tasks inside the hardhat config file.
